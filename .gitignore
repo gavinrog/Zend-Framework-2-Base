@@ -9,3 +9,4 @@
 composer.lock
 /data
 /vendor
+/composer.phar
