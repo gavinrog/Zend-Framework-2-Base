@@ -15,8 +15,20 @@ use Zend\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController {
 
+	private $usersMapper;
+
 	public function indexAction() {
-		return new ViewModel();
+
+		$user = $this->getUsersMapper()->fetchOne(1);
+
+		return new ViewModel(compact('user'));
+	}
+
+	private function getUsersMapper() {
+		if (!$this->usersMapper) {
+			$this->usersMapper = $this->getServiceLocator()->get('UsersMapper');
+		}
+		return $this->usersMapper;
 	}
 
 }

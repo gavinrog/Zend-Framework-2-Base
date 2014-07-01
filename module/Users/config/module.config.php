@@ -1,5 +1,7 @@
 <?php
 
+use Users\Mapper\Users as UsersMapper;
+
 /**
  * Zend Framework (http://framework.zend.com/)
  *
@@ -19,6 +21,13 @@ return array(
 					'Users\Entity' => 'user_entity'
 				)
 			)
+		)
+	),
+	'service_manager' => array(
+		'factories' => array(
+			'UsersMapper' => function($sm){
+				return new UsersMapper($sm->get('Doctrine\ORM\EntityManager'));
+			}
 		)
 	),
 	'controllers' => array(
