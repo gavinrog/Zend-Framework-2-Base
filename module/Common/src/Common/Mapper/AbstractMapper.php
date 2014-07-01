@@ -2,18 +2,21 @@
 
 namespace Common\Mapper;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManager,
+	Common\Mapper\Exception\NoEntityException;
 
 abstract class AbstractMapper {
 
 	protected $entityClass;
 	protected $entityManager;
 
-	public function __construct(EntityManager $entityManager, $entityClass = null) {
-		$this->entityManager = $entityManager;
-		if ($entityClass) {
-			$this->setEntityClass($entityClass);
+	public function __construct(EntityManager $entityManager) {
+
+		if (!$this->entityClass) {
+			throw new NoEntityException('You must set an entity class');
 		}
+
+		$this->entityManager = $entityManager;
 	}
 
 	public function setEntityManager(EntityManager $entityManager) {
