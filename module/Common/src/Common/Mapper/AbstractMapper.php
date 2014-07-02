@@ -53,4 +53,10 @@ abstract class AbstractMapper extends AbstractEventsProvider {
 		return $this->getRepository()->findBy($criteria);
 	}
 
+	public function persist($entity) {
+		$this->getEntityManager()->persist($entity);
+		$this->getEntityManager()->flush();
+		return $entity;
+	}
+
 }
