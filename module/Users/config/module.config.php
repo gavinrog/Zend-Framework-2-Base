@@ -1,6 +1,7 @@
 <?php
 
-use Users\Mapper\Users as UsersMapper;
+use Users\Mapper\Users as UsersMapper,
+	Users\Controller\Plugin\User as UserPlugin;
 
 /**
  * Zend Framework (http://framework.zend.com/)
@@ -34,6 +35,20 @@ return array(
 			)
 		),		
 	),
+	'controller_plugins' => array(
+        'factories' => array(
+            'user' => function($pm) {
+                $sm = $pm->getServiceLocator();
+				
+				$authService = $sm->get('AuthService');
+				
+                $user = new UserPlugin;               												
+				$user->setAuthService($authService);                               				
+				$user->setAuthAdapter($authService->getAdapter());
+                return $user;
+            }
+        )
+    ),
 	'service_manager' => array(
 		'factories' => array(
 			'AuthService' => function($sm){

@@ -18,7 +18,7 @@ class IndexController extends AbstractActionController {
 	private $usersMapper;
 
 	public function indexAction() {
-
+			
 		$user = $this->getUsersMapper()->fetchOne(1);
 
 		return new ViewModel(compact('user'));
