@@ -11,6 +11,17 @@ use Users\Mapper\Users as UsersMapper;
  */
 return array(
 	'doctrine' => array(
+		'authentication' => array(
+            'orm_default' => array(
+                'object_manager' => 'Doctrine\ORM\EntityManager',
+                'identity_class' => 'Users\Entity\User',
+                'identity_property' => 'username',
+                'credential_property' => 'password',
+				'credential_callable' => function($entity, $password){
+					return $entity->getPassword() == md5($password);
+				}
+            ),
+        ),
 		'driver' => array(
 			'user_entity' => array(
 				'class' => 'Doctrine\ORM\Mapping\Driver\XmlDriver',
@@ -21,13 +32,16 @@ return array(
 					'Users\Entity' => 'user_entity'
 				)
 			)
-		)
+		),		
 	),
 	'service_manager' => array(
 		'factories' => array(
+			'AuthService' => function($sm){
+				return $sm->get('doctrine.authenticationservice.orm_default');
+			},
 			'UsersMapper' => function($sm){
 				return new UsersMapper($sm->get('Doctrine\ORM\EntityManager'));
-			}
+			},					
 		)
 	),
 	'controllers' => array(
