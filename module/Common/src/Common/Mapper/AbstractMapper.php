@@ -54,8 +54,9 @@ abstract class AbstractMapper extends AbstractEventsProvider {
 	}
 
 	public function persist($entity) {
-		$this->getEntityManager()->persist($entity);
-		$this->getEntityManager()->flush();
+		$manager = $this->getEntityManager();
+		$manager->persist($entity);
+		$manager->flush();
 		return $entity;
 	}
 
