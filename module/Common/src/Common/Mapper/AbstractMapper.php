@@ -2,13 +2,11 @@
 
 namespace Common\Mapper;
 
-use Zend\EventManager\EventManagerAwareInterface,
-	Zend\EventManager\EventManagerInterface,
-	Zend\EventManager\EventManager,
-	Doctrine\ORM\EntityManager,
-	Common\Mapper\Exception\NoEntityException;
+use Common\EventManager\AbstractEventsProvider,
+	Common\Mapper\Exception\NoEntityException,
+	Doctrine\ORM\EntityManager;
 
-abstract class AbstractMapper implements EventManagerAwareInterface {
+abstract class AbstractMapper extends AbstractEventsProvider {
 
 	protected $entityClass;
 	protected $entityManager;
@@ -37,17 +35,6 @@ abstract class AbstractMapper implements EventManagerAwareInterface {
 	public function setEntityClass($entityClass) {
 		$this->entityClass = $entityClass;
 		return $this;
-	}
-
-	public function setEventManager(EventManagerInterface $eventManager) {
-		$this->eventManager = $eventManager;
-	}
-
-	public function getEventManager() {
-		if (!$this->eventManager) {
-			$this->setEventManager(new EventManager(array(__CLASS__, get_called_class())));
-		}
-		return $this->eventManager;
 	}
 
 	protected function getRepository() {
