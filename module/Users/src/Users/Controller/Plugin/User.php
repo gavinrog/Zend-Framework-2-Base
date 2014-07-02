@@ -29,4 +29,12 @@ class User extends AbstractPlugin {
 		return $this->authService;
 	}
 
+	public function getIdentity() {
+		return $this->getAuthService()->getIdentity();
+	}
+
+	public function hasIdentity() {
+		return $this->getAuthService()->hasIdentity();
+	}
+
 }
