@@ -27,9 +27,9 @@ class User {
 		return $this->username;
 	}
 
-	public function setPassword($password) {
+	public function setPassword($password, $requiresHash = true) {
 		$this->password = $password;
-		$this->passwordRequiresHash = true;
+		$this->passwordRequiresHash = $requiresHash;
 		return $this;
 	}
 

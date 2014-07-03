@@ -22,10 +22,6 @@ class IndexController extends AbstractActionController {
 
 		$user = $this->getUsersMapper()->fetchOne(1);
 
-		$user->setPassword('test');
-
-		$this->getUsersMapper()->persist($user);
-
 		return new ViewModel(compact('user'));
 	}
 
