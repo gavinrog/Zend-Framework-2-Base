@@ -12,7 +12,7 @@ class User extends AbstractPlugin {
 	protected $authService;
 
 	public function setAuthAdapter(AdapterInterface $adapter) {
-		$this->adapter = $adapter;
+		$this->authAdapter = $adapter;
 		return $this;
 	}
 
@@ -27,6 +27,10 @@ class User extends AbstractPlugin {
 
 	public function getAuthService() {
 		return $this->authService;
+	}
+
+	public function authenticate() {
+		return $this->getAuthService()->authenticate();
 	}
 
 	public function getIdentity() {

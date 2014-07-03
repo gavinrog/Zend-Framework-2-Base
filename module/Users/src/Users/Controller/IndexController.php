@@ -18,10 +18,27 @@ class IndexController extends AbstractActionController {
 	private $usersMapper;
 
 	public function indexAction() {
-			
+
 		$user = $this->getUsersMapper()->fetchOne(1);
 
 		return new ViewModel(compact('user'));
+	}
+
+	public function loginAction() {
+
+		$adapter = $this->user()->getAuthAdapter();
+
+		$adapter->setIdentityValue('Gavin');
+
+		$adapter->setCredentialValue('test');
+
+		$result = $this->user()->authenticate();
+
+		if (!$result->isValid()) {
+			die('not valid');
+		}
+
+		die('is valid');
 	}
 
 	private function getUsersMapper() {

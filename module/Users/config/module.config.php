@@ -38,8 +38,8 @@ return array(
 	'controller_plugins' => array(
         'factories' => array(
             'user' => function($pm) {
-                $sm = $pm->getServiceLocator();
-				
+                $sm = $pm->getServiceLocator();			
+                
 				$authService = $sm->get('AuthService');
 				
                 $user = new UserPlugin;               												
