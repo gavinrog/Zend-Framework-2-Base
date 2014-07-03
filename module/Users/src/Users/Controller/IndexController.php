@@ -12,8 +12,7 @@ namespace Users\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController,
 	Zend\View\Model\ViewModel,
-	Users\Form\LoginForm,
-	Users\Entity\User as UserEntity;
+	Users\Form\LoginForm;
 
 class IndexController extends AbstractActionController {
 
@@ -22,6 +21,10 @@ class IndexController extends AbstractActionController {
 	public function indexAction() {
 
 		$user = $this->getUsersMapper()->fetchOne(1);
+
+		$user->setPassword('test');
+
+		$this->getUsersMapper()->persist($user);
 
 		return new ViewModel(compact('user'));
 	}

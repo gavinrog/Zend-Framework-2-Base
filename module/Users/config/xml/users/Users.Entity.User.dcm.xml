@@ -6,13 +6,18 @@
                   
     <entity name="Users\Entity\User" table="users">
         
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="hashPassword" />
+            <lifecycle-callback type="preUpdate" method="hashPassword" />
+        </lifecycle-callbacks>
+        
         <id name="id" type="integer">
             <generator strategy="AUTO" />
         </id>
         
         <field name="username" type="string" length="255" unique="true" nullable="true" />                
         <field name="password" type="string" length="255" />       
-        
+                
     </entity>
 
 </doctrine-mapping>

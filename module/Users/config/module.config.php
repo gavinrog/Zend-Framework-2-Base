@@ -19,7 +19,7 @@ return array(
                 'identity_property' => 'username',
                 'credential_property' => 'password',
 				'credential_callable' => function($entity, $password){
-					return $entity->getPassword() == md5($password);
+					return password_verify($password, $entity->getPassword());
 				}
             ),
         ),
