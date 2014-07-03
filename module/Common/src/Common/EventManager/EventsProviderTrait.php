@@ -8,7 +8,6 @@ use Zend\EventManager\EventManagerInterface,
 trait EventsProviderTrait {
 
 	protected $eventManager;
-	protected $eventIdentifier;
 
 	public function setEventManager(EventManagerInterface $eventManager) {
 
