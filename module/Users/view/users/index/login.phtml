@@ -2,7 +2,7 @@
 
 <?php
 $form = $this->form;
-$form->setAttribute('action', $this->url('users/default', array('controller' => 'index', 'action' => 'login')));
+$form->setAttribute('action', $this->url('users/default', array('action' => 'login')));
 $form->get('submit')->setAttribute('value', 'Add');
 $form->prepare();
 ?>
