@@ -47,10 +47,10 @@ class IndexController extends AbstractActionController {
 				$result = $this->user()->authenticate();
 
 				if (!$result->isValid()) {
-					die('Logged in');
+					die('Not Logged in');
 				}
 
-				die('Not Logged In');
+				die('Logged In');
 			}
 		}
 
