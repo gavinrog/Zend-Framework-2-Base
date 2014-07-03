@@ -3,9 +3,13 @@
 namespace Users\Filter;
 
 use Zend\InputFilter\InputFilter,
+	Zend\EventManager\EventManagerAwareInterface,
+	Common\EventManager\EventsProviderTrait,
 	Zend\Validator\NotEmpty;
 
-class LoginFilter extends InputFilter {
+class LoginFilter extends InputFilter implements EventManagerAwareInterface {
+
+	use EventsProviderTrait;
 
 	public function __construct() {
 
@@ -38,6 +42,8 @@ class LoginFilter extends InputFilter {
 				),
 			),
 		));
+
+		$this->getEventManager()->trigger('init', $this);
 	}
 
 }

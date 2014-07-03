@@ -3,10 +3,14 @@
 namespace Users\Form;
 
 use Zend\Form\Form,
+	Zend\EventManager\EventManagerAwareInterface,
+	Common\EventManager\EventsProviderTrait,
 	Users\Filter\LoginFilter,
 	Zend\Stdlib\Hydrator\ClassMethods;
 
-class LoginForm extends Form {
+class LoginForm extends Form implements EventManagerAwareInterface {
+
+	use EventsProviderTrait;
 
 	public function __construct($name = null, $options = array()) {
 
@@ -42,6 +46,8 @@ class LoginForm extends Form {
 				'class' => 'btn btn-primary',
 			),
 		));
+
+		$this->getEventManager()->trigger('init', $this);
 	}
 
 }
