@@ -2,11 +2,10 @@
 
 namespace Common\EventManager;
 
-use Zend\EventManager\EventManagerAwareInterface,
-	Zend\EventManager\EventManagerInterface,
+use Zend\EventManager\EventManagerInterface,
 	Zend\EventManager\EventManager;
 
-abstract class AbstractEventsProvider implements EventManagerAwareInterface {
+trait EventsProviderTrait {
 
 	protected $eventManager;
 	protected $eventIdentifier;

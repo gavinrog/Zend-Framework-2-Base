@@ -2,11 +2,14 @@
 
 namespace Common\Mapper;
 
-use Common\EventManager\AbstractEventsProvider,
+use Zend\EventManager\EventManagerAwareInterface,
+	Common\EventManager\EventsProviderTrait,
 	Common\Mapper\Exception\NoEntityException,
 	Doctrine\ORM\EntityManager;
 
-abstract class AbstractMapper extends AbstractEventsProvider {
+abstract class AbstractMapper implements EventManagerAwareInterface {
+
+	use EventsProviderTrait;
 
 	protected $entityClass;
 	protected $entityManager;
