@@ -1,0 +1,23 @@
+<h2>Login Form</h2>
+
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url('users/default', array('controller' => 'index', 'action' => 'login')));
+$form->get('submit')->setAttribute('value', 'Add');
+$form->prepare();
+?>
+
+
+<?php echo $this->form()->openTag($form); ?>
+
+<div class="input">
+	<?php echo $this->formRow($form->get('username')); ?>
+</div>
+<div class="input">
+	<?php echo $this->formRow($form->get('password')); ?>
+</div>
+<div class="submit">
+	<?php echo $this->formInput($form->get('submit')); ?>
+</div>
+
+<?php echo $this->form()->closeTag($form); ?>

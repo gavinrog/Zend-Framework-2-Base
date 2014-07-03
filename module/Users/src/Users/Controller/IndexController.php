@@ -11,7 +11,9 @@
 namespace Users\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController,
-	Zend\View\Model\ViewModel;
+	Zend\View\Model\ViewModel,
+	Users\Form\LoginForm,
+	Users\Entity\User as UserEntity;
 
 class IndexController extends AbstractActionController {
 
@@ -26,19 +28,33 @@ class IndexController extends AbstractActionController {
 
 	public function loginAction() {
 
-		$adapter = $this->user()->getAuthAdapter();
+		$form = new LoginForm;
 
-		$adapter->setIdentityValue('Gavin');
+		$form->bind(new UserEntity);
 
-		$adapter->setCredentialValue('test');
+		if ($this->request->isPost()) {
 
-		$result = $this->user()->authenticate();
+			$form->setData($this->request->getPost());
 
-		if (!$result->isValid()) {
-			die('not valid');
+			if ($form->isValid()) {
+
+				$user = $form->getObject();
+
+				$adapter = $this->user()->getAuthAdapter();
+				$adapter->setIdentityValue($user->getUsername());
+				$adapter->setCredentialValue($user->getPassword());
+
+				$result = $this->user()->authenticate();
+
+				if (!$result->isValid()) {
+					die('Logged in');
+				}
+
+				die('Not Logged In');
+			}
 		}
 
-		die('is valid');
+		return new ViewModel(compact('form'));
 	}
 
 	private function getUsersMapper() {

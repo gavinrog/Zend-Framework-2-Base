@@ -27,7 +27,7 @@ class User {
 	}
 
 	public function setPassword($password) {
-		$this->password = md5($password);
+		$this->password = $password;
 		return $this;
 	}
 
