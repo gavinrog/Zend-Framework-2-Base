@@ -30,27 +30,27 @@ class IndexController extends AbstractActionController {
 
 		$form = new LoginForm;
 
-		$form->bind(new UserEntity);
-
 		if ($this->request->isPost()) {
 
 			$form->setData($this->request->getPost());
 
 			if ($form->isValid()) {
 
-				$user = $form->getObject();
+				$data = $form->getData();
 
 				$adapter = $this->user()->getAuthAdapter();
-				$adapter->setIdentityValue($user->getUsername());
-				$adapter->setCredentialValue($user->getPassword());
+
+				$adapter->setIdentityValue($data['username']);
+				$adapter->setCredentialValue($data['password']);
 
 				$result = $this->user()->authenticate();
 
-				if (!$result->isValid()) {
-					die('Not Logged in');
+				if ($result->isValid()) {
+					echo "logged in";
 				}
-
-				die('Logged In');
+				else {
+					echo "not logged in";
+				}
 			}
 		}
 
