@@ -10,57 +10,58 @@
 
 namespace Users\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController,
-	Zend\View\Model\ViewModel,
-	Users\Form\LoginForm;
+use Zend\Http\PhpEnvironment\Response,
+    Zend\Mvc\Controller\AbstractActionController,
+    Zend\Stdlib\Parameters,
+    Zend\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController {
 
-	private $usersMapper;
+    private $usersMapper;
+    private $userService;
 
-	public function indexAction() {
+    public function indexAction() {
 
-		$user = $this->getUsersMapper()->fetchOne(1);
+        $user = $this->getUsersMapper()->fetchOne(1);
 
-		return new ViewModel(compact('user'));
-	}
+        return new ViewModel(compact('user'));
+    }
 
-	public function loginAction() {
+    public function loginAction() {
 
-		$form = new LoginForm;
+        $service = $this->getUserService();
 
-		if ($this->request->isPost()) {
+        $prg = $this->prg($this->url()->fromRoute('users/default', array('action' => 'login')), true);
 
-			$form->setData($this->request->getPost());
+        if ($prg instanceof Response) {
+            return $prg;
+        }
 
-			if ($form->isValid()) {
+        if ($prg !== false) {
+            if ($service->login(new Parameters($prg))) {
+                return $this->redirect()->toRoute('users');
+            }
+        }
 
-				$data = $form->getData();
+        return new ViewModel(array(
+            'form' => $service->getLoginForm()
+        ));
+    }
 
-				$adapter = $this->user()->getAuthAdapter();
+    public function getUsersMapper() {
+        if (!$this->usersMapper) {
+            $this->usersMapper = $this->getServiceLocator()->get('UsersMapper');
+        }
+        return $this->usersMapper;
+    }
 
-				$adapter->setIdentityValue($data['username']);
-				$adapter->setCredentialValue($data['password']);
+    public function getUserService() {
 
-				$result = $this->user()->authenticate();
+        if (!$this->userService) {
+            $this->userService = $this->getServiceLocator()->get('UserService');
+        }
 
-				if ($result->isValid()) {
-					echo "logged in";
-				}
-				else {
-					echo "not logged in";
-				}
-			}
-		}
-
-		return new ViewModel(compact('form'));
-	}
-
-	private function getUsersMapper() {
-		if (!$this->usersMapper) {
-			$this->usersMapper = $this->getServiceLocator()->get('UsersMapper');
-		}
-		return $this->usersMapper;
-	}
+        return $this->userService;
+    }
 
 }

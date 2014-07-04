@@ -1,7 +1,8 @@
 <?php
 
 use Users\Mapper\Users as UsersMapper,
-	Users\Controller\Plugin\User as UserPlugin;
+	Users\Controller\Plugin\User as UserPlugin,
+    Users\Service\User as UserService;
 
 /**
  * Zend Framework (http://framework.zend.com/)
@@ -38,14 +39,8 @@ return array(
 	'controller_plugins' => array(
         'factories' => array(
             'user' => function($pm) {
-                $sm = $pm->getServiceLocator();			
-                
-				$authService = $sm->get('AuthService');
-				
-                $user = new UserPlugin;               												
-				$user->setAuthService($authService);                               				
-				$user->setAuthAdapter($authService->getAdapter());
-                return $user;
+                $sm = $pm->getServiceLocator();			                
+				return new UserPlugin($sm->get('AuthService'));
             }
         )
     ),
@@ -56,7 +51,12 @@ return array(
 			},
 			'UsersMapper' => function($sm){
 				return new UsersMapper($sm->get('Doctrine\ORM\EntityManager'));
-			},					
+			},
+            'UserService' => function($sm){
+                $service = new UserService($sm);             
+                $service->setAuthAdapter($sm->get('AuthService')->getAdapter());
+                return $service;
+            }
 		)
 	),
 	'controllers' => array(

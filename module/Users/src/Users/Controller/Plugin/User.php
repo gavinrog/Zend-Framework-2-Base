@@ -3,42 +3,31 @@
 namespace Users\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin,
-	Zend\Authentication\Adapter\AdapterInterface,
-	Zend\Authentication\AuthenticationServiceInterface;
+    Zend\Authentication\AuthenticationServiceInterface;
 
 class User extends AbstractPlugin {
 
-	protected $authAdapter;
-	protected $authService;
+    protected $authService;
 
-	public function setAuthAdapter(AdapterInterface $adapter) {
-		$this->authAdapter = $adapter;
-		return $this;
-	}
+    public function __construct(AuthenticationServiceInterface $authService) {
+        $this->setAuthService($authService);
+    }
 
-	public function getAuthAdapter() {
-		return $this->authAdapter;
-	}
+    public function setAuthService(AuthenticationServiceInterface $authService) {
+        $this->authService = $authService;
+        return $this;
+    }
 
-	public function setAuthService(AuthenticationServiceInterface $authService) {
-		$this->authService = $authService;
-		return $this;
-	}
+    public function getAuthService() {
+        return $this->authService;
+    }
 
-	public function getAuthService() {
-		return $this->authService;
-	}
+    public function getIdentity() {
+        return $this->getAuthService()->getIdentity();
+    }
 
-	public function authenticate() {
-		return $this->getAuthService()->authenticate();
-	}
-
-	public function getIdentity() {
-		return $this->getAuthService()->getIdentity();
-	}
-
-	public function hasIdentity() {
-		return $this->getAuthService()->hasIdentity();
-	}
+    public function hasIdentity() {
+        return $this->getAuthService()->hasIdentity();
+    }
 
 }
