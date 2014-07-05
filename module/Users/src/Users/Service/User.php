@@ -6,7 +6,9 @@ use Common\EventManager\EventsProviderTrait,
     Common\Mapper\AbstractMapper,
     Users\Form\LoginForm,
     Zend\Authentication\AuthenticationServiceInterface,
-    Zend\Authentication\Adapter\AdapterInterface,
+    DoctrineModule\Authentication\Adapter\ObjectRepository,
+    Zend\Crypt\Password\Bcrypt,
+    Zend\Crypt\Password\PasswordInterface,
     Zend\EventManager\EventManagerAwareInterface,
     Zend\Form\FormInterface,
     Zend\ServiceManager\ServiceLocatorAwareInterface,
@@ -22,6 +24,7 @@ class User implements EventManagerAwareInterface, ServiceLocatorAwareInterface {
     protected $authAdapter;
     protected $authService;
     protected $loginForm;
+    protected $passwordTreatment;
     protected $userMapper;
 
     public function __construct(ServiceLocatorInterface $serviceLocator) {
@@ -52,7 +55,7 @@ class User implements EventManagerAwareInterface, ServiceLocatorAwareInterface {
         return $this->userMapper;
     }
 
-    public function setAuthAdapter(AdapterInterface $adapter) {
+    public function setAuthAdapter(ObjectRepository $adapter) {
         $this->authAdapter = $adapter;
         return $this;
     }
@@ -73,6 +76,18 @@ class User implements EventManagerAwareInterface, ServiceLocatorAwareInterface {
         return $this->authService;
     }
 
+    public function getPasswordTreatment() {
+        if (!$this->passwordTreatment) {
+            $this->setPasswordTreatment(new Bcrypt);
+        }
+        return $this->passwordTreatment;
+    }
+
+    public function setPasswordTreatment(PasswordInterface $passwordTreatment) {
+        $this->passwordTreatment = $passwordTreatment;
+        return $this;
+    }
+
     public function login(Parameters $params) {
 
         $form = $this->getLoginForm();
@@ -89,10 +104,17 @@ class User implements EventManagerAwareInterface, ServiceLocatorAwareInterface {
         $user = $form->getData();
 
         $adapter = $this->getAuthAdapter();
+
         $adapter->setIdentityValue($user->getUsername());
         $adapter->setCredentialValue($user->getPassword());
 
+        $adapter->getOptions()->setCredentialCallable(function($entity, $password) {
+            return $this->getPasswordTreatment()->verify($password, $entity->getPassword());
+        });
+
         $result = $this->getAuthService()->authenticate();
+
+        $this->getEventManager()->trigger('authenticate', $this, compact('result'));
 
         return $result->isValid();
     }

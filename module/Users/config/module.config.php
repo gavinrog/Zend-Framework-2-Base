@@ -18,10 +18,7 @@ return array(
                 'object_manager' => 'Doctrine\ORM\EntityManager',
                 'identity_class' => 'Users\Entity\User',
                 'identity_property' => 'username',
-                'credential_property' => 'password',
-				'credential_callable' => function($entity, $password){
-					return password_verify($password, $entity->getPassword());
-				}
+                'credential_property' => 'password',				
             ),
         ),
 		'driver' => array(
